@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View PDF Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Back Button -->
+        <div class="back-button">
+            <a href="{{ url_for('index') }}">← Back to Home</a>
+        </div>
+
+        <div class="header">
+            <h1>Viewing Page {{ page_number }} of {{ total_pages }}</h1>
+            <div class="pagination">
+                <span>Page {{ page_number }} of {{ total_pages }}</span>
+                <form method="POST">
+                    <button type="submit" name="prev" {% if page_number == 1 %}disabled{% endif %}>◀</button>
+                    <button type="submit" name="next" {% if page_number == total_pages %}disabled{% endif %}>▶</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="text-viewer">
+                <h3>Current Page Content:</h3>
+                <pre>{{ text }}</pre>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-history">
+                    {% for message in chat_history %}
+                    <div class="message {{ message.type }}">
+                        <div class="message-header">
+                            <span class="role">{{ message.type|title }}</span>
+                            <span class="time">{{ message.timestamp }}</span>
+                        </div>
+                        <div class="message-content">{{ message.content }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="chat-input">
+                    <form method="POST">
+                        <input type="text" name="chat_message" placeholder="Ask a question about the document..." required>
+                        <button type="submit">Send</button>
+                    </form>
+                </div>
+
+                <div class="quick-questions">
+                    <form method="POST">
+                        <button type="submit" name="question" value="What is the main legal argument presented?">Main Argument</button>
+                        <button type="submit" name="question" value="List key precedents cited in this document">Key Precedents</button>
+                        <button type="submit" name="question" value="What are the critical findings in this section?">Critical Findings</button>
+                        <button type="submit" name="summarize">Summarize Context</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
